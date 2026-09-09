@@ -1,0 +1,19 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: AI Code Review based on Opencode
+        uses: Emeteil/ai_code_reviewer@v1.0.1
+        with:
+          language: Russian
+          model: ""
