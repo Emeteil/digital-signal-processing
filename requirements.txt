@@ -1,4 +1,4 @@
 icecream==2.2.0
 matplotlib==3.11.1
-numpy==1.23.5
-scipy==1.18.1
+numpy>=2.1
+scipy>=1.14
