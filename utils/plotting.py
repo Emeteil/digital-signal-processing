@@ -5,7 +5,7 @@ from matplotlib.axes import Axes
 
 
 def show_multi_plot(
-    t: np.ndarray,
+    t: np.ndarray | Sequence[np.ndarray],
     func_vals: Sequence[np.ndarray],
     labels: Sequence[str] | None = None,
     is_stem: bool = False,
@@ -21,10 +21,16 @@ def show_multi_plot(
 
     for i, func_val in enumerate(func_vals):
         label = labels[i] if labels else None
-        if is_stem:
-            plt.stem(t, func_val, label=label)
+
+        if isinstance(t, np.ndarray):
+            current_t = t
         else:
-            plt.plot(t, func_val, label=label)
+            current_t = t[i]
+
+        if is_stem:
+            plt.stem(current_t, func_val, label=label)
+        else:
+            plt.plot(current_t, func_val, label=label)
 
     if title:
         plt.title(title)
