@@ -7,7 +7,8 @@ import utils.debug  # noqa: F401
 
 from utils.harmonic import (
     get_harmonic_oscillation,
-    get_period
+    get_period,
+    get_phase_at
 )
 from utils.plotting import show_multi_plot, show_plot
 from utils.sampling import get_linspace
@@ -98,54 +99,104 @@ def task_2() -> None:
 
 
 def task_3() -> None:
-    # """
-    # `Выполните моделирование колебаний с различными начальными фазами.`
-    # """
+    """
+    `Сложение гармонических колебаний колебания c различными фазами.`
+    """
     fs = 1000
     A = 2
+    f = 3
 
     func_vals = []
-    t = get_linspace(start=0, stop=3, fs=fs)
+    t = get_linspace(start=0, stop=3 * get_period(f), fs=fs)
 
     func_vals.append(
-        get_harmonic_oscillation(A, 3, np.pi / 2)(t)
+        get_harmonic_oscillation(A, f, np.pi / 4, wave=np.cos)(t)
+    )
+    func_vals.append(
+        get_harmonic_oscillation(A, f, np.pi / 3, wave=np.cos)(t)
+    )
+
+    x_sum = sum(func_vals)
+    A_result = x_sum.max()
+    phi_result = -get_phase_at(f, t[x_sum.argmax()]) % (2 * np.pi)
+
+    ic(A_result, phi_result)
+
+    show_plot(
+        t=t,
+        func_val=x_sum,
+        title="сумма двух гармонических колебаний с одинаковой частотой"
     )
 
     func_vals.append(
-        get_harmonic_oscillation(A, 2, -np.pi / 3)(t)
+        get_harmonic_oscillation(A, f, -np.pi / 6, wave=np.cos)(t)
+    )
+
+    x_sum = sum(func_vals)
+    A_result = x_sum.max()
+    phi_result = -get_phase_at(f, t[x_sum.argmax()]) % (2 * np.pi)
+
+    ic(A_result, phi_result)
+
+    show_plot(
+        t=t,
+        func_val=x_sum,
+        title="сумма трёх гармонических колебаний с одинаковой частотой"
+    )
+
+
+def task_4() -> None:
+    """
+    `Сложение гармонических колебаний колебания c различными частотами и
+    начальными фазами.`
+    """
+    fs = 2000
+    f = 5
+
+    func_vals = []
+    t = get_linspace(start=0, stop=5 * get_period(f), fs=fs)
+
+    func_vals.append(
+        get_harmonic_oscillation(4 / np.pi, f, -np.pi / 2, wave=np.cos)(t)
+    )
+    func_vals.append(
+        get_harmonic_oscillation(4 / (3 * np.pi), 3 * f, -np.pi / 2, wave=np.cos)(t)
     )
 
     show_plot(
         t=t,
         func_val=sum(func_vals),
-        title="гармоническое колебание с различными A, f, stop"
+        title="x(t) = 4/π*cos(2πft-π/2) + 4/3π*cos(2π*3f*t-π/2)"
     )
 
     func_vals = []
+    labels = []
 
-    func_vals.append(
-        get_harmonic_oscillation(A, 3, np.pi / 4)(t)
-    )
+    for n in range(6):
+        func_vals.append(
+            get_harmonic_oscillation(
+                4 / ((2 * n - 1) * np.pi), (2 * n - 1) * f, -np.pi / 2, wave=np.cos
+            )(t)
+        )
+        labels.append(f"N = {n + 1}")
 
-    func_vals.append(
-        get_harmonic_oscillation(A, 2, np.pi / 5)(t)
-    )
-
-    func_vals.append(
-        get_harmonic_oscillation(A, 20, np.pi / 2)(t)
-    )
-
-    show_plot(
+    show_multi_plot(
         t=t,
-        func_val=sum(func_vals),
-        title="гармоническое колебание с различными A, f, stop"
+        func_vals=[sum(func_vals[:i + 1]) for i in range(len(func_vals))],
+        labels=labels,
+        title="приближение меандра суммой гармоник"
     )
 
 
 def main() -> None:
     task_1()
     task_2()
+
+    print("-" * 50)
     task_3()
+    print("-" * 50)
+
+    task_4()
 
 
 if __name__ == "__main__":
