@@ -49,6 +49,30 @@ def show_multi_plot(
         pass
 
 
+def show_subplots(
+    draw_funcs: Sequence[Callable[[Axes], None]],
+    titles: Sequence[str] | None = None,
+    figsize: tuple[float, float] | None = None,
+) -> None:
+    fig, axes = plt.subplots(len(draw_funcs), 1, figsize=figsize, squeeze=False)
+
+    for i, draw in enumerate(draw_funcs):
+        ax = axes[i][0]
+        draw(ax)
+
+        if titles:
+            ax.set_title(titles[i])
+
+        ax.grid()
+
+    fig.tight_layout()
+
+    try:
+        plt.show()
+    except KeyboardInterrupt:
+        pass
+
+
 def show_plot(
     t: np.ndarray,
     func_val: np.ndarray,
