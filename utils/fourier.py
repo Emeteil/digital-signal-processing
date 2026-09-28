@@ -10,10 +10,10 @@ def discrete_fourier_transform(x: np.ndarray) -> np.ndarray:
         for n in range(N):
             s += x[n] * np.exp(-2j * np.pi * k * n / N)
         X.append(s)
-    
+
     return np.array(X)
 
-    
+
 def integrate(x_t: np.ndarray, t: np.ndarray) -> complex:
     """приближённое интегрирование методом прямоугольников: ∫x(t)dt ≈ sum(x)*Ts"""
     Ts = t[1] - t[0]
@@ -28,6 +28,7 @@ def _get_a_b(n: int, x_t: np.ndarray, t: np.ndarray, f: float, wave: Callable[[f
 
 def get_a(n: int, x_t: np.ndarray, t: np.ndarray, f: float) -> float:
     return _get_a_b(n, x_t, t, f, np.cos)
+
 
 def get_b(n: int, x_t: np.ndarray, t: np.ndarray, f: float) -> float:
     return _get_a_b(n, x_t, t, f, np.sin)
