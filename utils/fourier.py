@@ -32,3 +32,8 @@ def get_a(n: int, x_t: np.ndarray, t: np.ndarray, f: float) -> float:
 
 def get_b(n: int, x_t: np.ndarray, t: np.ndarray, f: float) -> float:
     return _get_a_b(n, x_t, t, f, np.sin)
+
+
+def get_fourier_transform(x_t: np.ndarray, t: np.ndarray, f: float) -> complex:
+    """X(f) = ∫x(t)e^(-j2πft)dt"""
+    return integrate(x_t * np.exp(-2j * np.pi * f * t), t)

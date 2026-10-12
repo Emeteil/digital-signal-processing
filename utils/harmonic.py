@@ -27,6 +27,18 @@ def get_rect_oscillation(
     return y
 
 
+def get_single_rect_oscillation(
+    a: float,
+    tau: float,
+    t0: float = 0
+) -> Callable[[np.ndarray], np.ndarray]:
+    """непериодический прямоугольный сигнал: a на [t0 - tau/2, t0 + tau/2], иначе 0"""
+    def y(t: np.ndarray) -> np.ndarray:
+        return np.where(np.abs(t - t0) <= tau / 2, a, 0.0)
+
+    return y
+
+
 def get_period(f: float) -> float:
     """T = 1/f"""
     return 1 / f
